@@ -1,15 +1,23 @@
 {
-  "name": "backend",
+  "name": "skillpath-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "SkillPath graph-based career exploration API",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/local.js",
+    "dev": "nodemon src/local.js",
+    "seed": "node scripts/seed.js",
+    "test:queries": "node scripts/test-queries.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "graph",
+    "cognodb",
+    "neo4j",
+    "career",
+    "skillpath"
+  ],
+  "author": "Hitesh Mali",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

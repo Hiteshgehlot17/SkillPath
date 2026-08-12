@@ -1,5 +1,4 @@
 import express from "express";
-import http from "http";
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -12,21 +11,28 @@ import analysisRoutes from "./routes/analysis.routes.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: true
+  })
+);
+
 app.use(express.json());
 
+/*
+ * Health check
+ */
 app.get("/health", async (req, res) => {
   try {
     await driver.verifyConnectivity();
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Server and CognoDB are connected"
     });
   } catch (error) {
-    console.error("Database error:", error.message);
+    console.error("CognoDB connection error:", error.message);
 
     res.status(503).json({
       success: false,
@@ -35,14 +41,40 @@ app.get("/health", async (req, res) => {
   }
 });
 
+/*
+ * API routes
+ */
 app.use("/api/skills", skillsRoutes);
+
 app.use("/api/roles", rolesRoutes);
+
 app.use("/api/analyze", analysisRoutes);
 
-const server = http.createServer(app);
-
-server.listen(PORT, "127.0.0.1", () => {
-  console.log(`🚀 SkillPath API running on http://127.0.0.1:${PORT}`);
+/*
+ * Unknown route
+ */
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found"
+  });
 });
 
-server.ref();
+/*
+ * Error handler
+ */
+app.use((error, req, res, next) => {
+  console.error("Unhandled server error:", error);
+
+  res.status(500).json({
+    success: false,
+    message: "Internal server error"
+  });
+});
+
+/*
+ * Export Express application.
+ *
+ * Vercel uses this exported app as the backend.
+ */
+export default app;
