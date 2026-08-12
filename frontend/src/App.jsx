@@ -17,6 +17,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     async function loadData() {
       try {
@@ -28,9 +30,10 @@ function App() {
         setSkills(skillsResponse.data);
         setRoles(rolesResponse.data);
       } catch (err) {
-        console.error(err);
+        console.error("SkillPath API error:", err);
+
         setError(
-          "Unable to connect to SkillPath. Make sure the backend is running."
+          "Unable to connect to SkillPath. Please try again."
         );
       } finally {
         setLoading(false);
@@ -53,9 +56,11 @@ function App() {
     return (
       <div className="error-screen">
         <h1>SkillPath</h1>
+
         <p>{error}</p>
+
         <small>
-          Backend: http://127.0.0.1:5001
+          Backend: {API_URL}
         </small>
       </div>
     );
