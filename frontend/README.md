@@ -1,16 +1,53 @@
-# React + Vite
+# SkillPath
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+### Graph-Based Career Path & Skill Gap Explorer
 
-Currently, two official plugins are available:
+SkillPath is a web application that helps users understand how their current technical skills map to a target software engineering role.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Users can select their existing skills, choose a target role, and receive:
 
-## React Compiler
+- Skill match percentage
+- Matched skills
+- Missing skills
+- Multi-hop career/prerequisite paths
+- Recommended projects for missing skills
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The application is backed by **CognoDB**, a managed graph database using openCypher and the official Neo4j driver.
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Live Demo
+
+**Frontend:**  
+https://skill-path-theta.vercel.app
+
+**Backend API:**  
+https://skill-path-rod3b2hc5-hitesh-malis-projects.vercel.app
+
+---
+
+## Why a Graph Database?
+
+SkillPath is fundamentally about relationships between entities:
+
+- Users have skills
+- Roles require skills
+- Skills have prerequisites
+- Projects teach skills
+
+These relationships form a connected graph.
+
+A relational database could store the same information, but queries involving multi-hop prerequisite traversal and career paths would require complex joins or recursive queries.
+
+With a graph database, these relationships can be traversed naturally using Cypher.
+
+For example:
+
+```text
+User
+  │
+  └── HAS_SKILL → Skill
+                    │
+                    └── PREREQUISITE_OF → Skill
+                                              │
+                                              └── REQUIRED_BY → Role
