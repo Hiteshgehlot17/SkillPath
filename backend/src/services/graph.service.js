@@ -113,24 +113,24 @@ export async function analyzeCareer(userId, roleName) {
     );
 
     // Recommended projects
-    const projectResult = await session.run(
-      `
-      MATCH (skill:Skill)
+const projectResult = await session.run(
+  `
+  MATCH (skill:Skill)
 
-      WHERE skill.name IN $missingSkills
+  WHERE skill.name IN $missingSkills
 
-      OPTIONAL MATCH (project:Project)-[:TEACHES]->(skill)
+  MATCH (project:Project)-[:TEACHES]->(skill)
 
-      RETURN
-        skill.name AS skill,
-        collect(DISTINCT project.name) AS projects
+  RETURN
+    skill.name AS skill,
+    collect(DISTINCT project.name) AS projects
 
-      ORDER BY skill
-      `,
-      {
-        missingSkills
-      }
-    );
+  ORDER BY skill
+  `,
+  {
+    missingSkills
+  }
+);
 
     const recommendations = projectResult.records.map((record) => ({
       skill: record.get("skill"),

@@ -1,6 +1,6 @@
 MATCH (r:Role {name: $roleName})-[:REQUIRES]->(skill:Skill)
 
-OPTIONAL MATCH (p:Project)-[:TEACHES]->(skill)
+MATCH (p:Project)-[:TEACHES]->(skill)
 
 RETURN
     skill.name AS skill,
